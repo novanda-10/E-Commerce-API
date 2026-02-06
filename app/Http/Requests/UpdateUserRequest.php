@@ -24,6 +24,7 @@ class UpdateUserRequest extends FormRequest
         return [
             'data.attributes.name' => 'required',
             'data.attributes.email' => 'required',
+            'data.attributes.role' => 'required|in:m,p,c',
             'data.attributes.password' => 'required'
         ];
     }

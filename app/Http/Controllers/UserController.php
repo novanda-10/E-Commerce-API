@@ -6,11 +6,15 @@ use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use App\Policies\UserPolicy;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
+
 
 class UserController extends Controller
 {
 
+    use AuthorizesRequests;
 
 
 
@@ -33,6 +37,8 @@ class UserController extends Controller
     {
        // dd($request->all());
 
+       $this->authorize('store', User::class );//userPolicty.php
+
        $userData = $request->input('data.attributes');
 
        return User::create($userData);
@@ -54,6 +60,8 @@ class UserController extends Controller
     {
         $user = User::findOrfail($id);
 
+        $this->authorize('update', User::class );//userPolicty.php
+
         $userData = $request->input('data.attributes');
 
         $user->update($userData);
@@ -67,6 +75,8 @@ class UserController extends Controller
     public function destroy(string $id)
     {
         $user = User::findOrfail($id);
+
+        $this->authorize('delete', User::class );//userPolicty.php
 
         $user->delete();
 

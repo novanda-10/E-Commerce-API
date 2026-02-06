@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ApiLoginRequest;
 use App\Models\User;
+use App\Permissions\Abilities;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+
 
 class AuthController extends Controller
 {
@@ -24,7 +26,9 @@ class AuthController extends Controller
         $user = User::firstWhere('email' , $request->email);
         
 
-        $token = $user->createToken('api token for '.$user->email)->plainTextToken;
+        $token = $user->createToken('api token for '.$user->email,
+        Abilities::getAbilities($user),
+        )->plainTextToken;
 
         return response()->json([
             $token
