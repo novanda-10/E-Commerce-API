@@ -5,10 +5,13 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
+    use AuthorizesRequests;
+
     /**
      * Display a listing of the resource.
      */
@@ -25,6 +28,9 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request)
     {
+
+        $this->authorize('store', Product::class );//productPolicty.php
+
         $productData = $request->input('data.attributes');
 
         return Product::create($productData);
@@ -46,6 +52,8 @@ class ProductController extends Controller
     {
         $product = Product::findOrfail($id);
 
+        $this->authorize('update', $product);//productPolicty.php
+
         $productData = $request->input('data.attributes');
 
         $product->update($productData);
@@ -59,6 +67,8 @@ class ProductController extends Controller
     public function destroy(string $id)
     {
         $product = Product::findOrfail($id);
+
+        $this->authorize('delete', $product);//productPolicty.php
 
         $product->delete();
 
